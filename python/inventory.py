@@ -38,6 +38,11 @@ class Inventory(object):
         self.c.execute('DELETE FROM inventory WHERE item=?', name)
         self.conn.commit()
 
+    def update_qty(self, name, newqty):
+        record = (newqty, name)
+        self.c.execute('UPDATE inventory SET qty = ? WHERE item=?', record)
+        self.conn.commit()
+
     def query_sort(self, sort_field='name', direction='ascending'):
         self.sort_field = sort_field
         self.direction = direction
