@@ -44,7 +44,7 @@ class Inventory(object):
         self.conn.commit()
 
     def update_price(self, name, newprice):
-        record = (newprice, name)
+        record = ('{0:.2f}'.format(newprice), name)
         self.c.execute('UPDATE inventory SET price = ? WHERE item=?', record)
         self.conn.commit()
 
@@ -129,3 +129,9 @@ class Inventory(object):
         else:
             print 'Already on first page.'
             return []
+
+    def query_by_price(self, low=0, high=None):
+        if high is not None:
+            return self.c.execute('SELECT * FROM inventory WHERE price >= ? AND price <= ? ORDER BY price', (low, high))
+        else:
+            return self.c.execute('SELECT * FROM inventory WHERE price >= ? ORDER BY price', (low,))

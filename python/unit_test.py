@@ -78,11 +78,29 @@ class InventoryTest(unittest.TestCase):
         self.assertEqual(self.inv.c.fetchone()[0], 10)
         self.inv.update_price('item000', original_price)
 
-    def count_records(self):
+    def test_query_by_price(self):
+        original_price1 = self.inv.c.execute('SELECT price FROM inventory WHERE item=?', ('item050',)).fetchone()[0]
+        original_price2 = self.inv.c.execute('SELECT price FROM inventory WHERE item=?', ('item150',)).fetchone()[0]
+        self.inv.update_price('item050', 50)
+        self.inv.update_price('item150', 70)
+        # Check with low and high price range
         count = 0
-        for row in self.inv.c.execute('SELECT * FROM inventory'):
+        for row in self.inv.query_by_price(40,80):
             count += 1
-        return count
+        self.assertEqual(count, 2)
+        # Check with only low price
+        count = 0
+        for row in self.inv.query_by_price(40):
+            count += 1
+        self.assertEqual(count, 2)
+        # We also expect all records to be returned with no prices set
+        count = 0
+        for row in self.inv.query_by_price():
+            count += 1
+        self.assertEqual(count, self.count_records())
+
+    def count_records(self):
+        return self.inv.c.execute('SELECT Count(*) FROM inventory').fetchone()[0]
 
 
 if __name__ == '__main__':
