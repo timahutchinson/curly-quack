@@ -62,8 +62,14 @@ class InventoryTest(unittest.TestCase):
     def test_count_records(self):
         self.assertEqual(self.count_records(), self.inv.nrecords)
 
-    def test_next_page():
+    def test_next_page(self):
         pass
+
+    def test_update_qty(self):
+        self.inv.update_qty('item000', 250)
+        self.inv.c.execute('SELECT qty FROM inventory WHERE item=?', ('item000',))
+        self.assertEqual(self.inv.c.fetchone()[0], 250)
+        self.inv.update_qty('item000', 500)
 
     def count_records(self):
         count = 0
