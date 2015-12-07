@@ -34,23 +34,39 @@ class DatabaseTest(unittest.TestCase):
 class InventoryTest(unittest.TestCase):
     
     def setUp(self):
-        """Create test database"""
-        self.conn = sqlite3.connect('test.db')
-        self.c = self.conn.cursor()
+        """Create inventory instance."""
+        self.inv = Inventory()
 
     def tearDown(self):
-        self.conn.close()
-        remove('test.db')
+        """Close database opened by self.inv."""
+        self.inv.close()
 
     def test_add_record_to_database(self):
         nrecords = self.count_records()
-        inv = Inventory()
-        inv.add_item('test_item', 15.00, 200)
+        self.inv.add_item('test_item', 15.00, 200)
         self.assertEqual(self.count_records(), nrecords+1)
+
+    def test_remove_record_from_database(self):
+        nrecords = self.count_records()
+        self.inv.remove_item('test_item')
+        self.assertEqual(self.count_records(), nrecords-1)
+
+    def test_query_sort(self):
+        for field in ['name', 'price', 'qty', 'updated']:
+            for direction in ['ascending', 'descending']:
+                count = 0
+                for row in self.inv.query_sort(field, direction):
+                    count += 1
+                self.assertEqual(count, 100)
+
+    def test_count_records(self):
+        self.assertEqual(self.count_records(), self.inv.nrecords)
+
+    def test_next_page
 
     def count_records(self):
         count = 0
-        for row in self.c.execute('SELECT * FROM inventory'):
+        for row in self.inv.c.execute('SELECT * FROM inventory'):
             count += 1
         return count
 
