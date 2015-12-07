@@ -50,13 +50,13 @@ class Inventory(object):
         self.c.execute('UPDATE inventory SET price = ? WHERE item=?', record)
         self.conn.commit()
 
-    def query_sort(self, sort_field='name', direction='ascending'):
+    def query_sort(self, sort_field='item', direction='ascending'):
         self.sort_field = sort_field
         self.direction = direction
         self.offset = 100
         if self.direction.lower() == 'ascending':
             # ORDER BY has a bug that doesn't allow insertion of value from tuple at the moment
-            if self.sort_field.lower() == 'name':
+            if self.sort_field.lower() == 'item':
                 return self.c.execute('SELECT * FROM inventory ORDER BY item ASC LIMIT 100')
             elif self.sort_field.lower() == 'price':
                 return self.c.execute('SELECT * FROM inventory ORDER BY price ASC LIMIT 100')
@@ -65,9 +65,9 @@ class Inventory(object):
             elif self.sort_field.lower() == 'updated':
                 return self.c.execute('SELECT * FROM inventory ORDER BY updated ASC LIMIT 100')
             else:
-                print 'Sortable fields are "name", "price", "qty", and "updated".'
+                print 'Sortable fields are "item", "price", "qty", and "updated".'
         elif self.direction.lower() == 'descending':
-            if self.sort_field.lower() == 'name':
+            if self.sort_field.lower() == 'item':
                 return self.c.execute('SELECT * FROM inventory ORDER BY item DESC LIMIT 100')
             elif self.sort_field.lower() == 'price':
                 return self.c.execute('SELECT * FROM inventory ORDER BY price DESC LIMIT 100')
@@ -85,7 +85,7 @@ class Inventory(object):
             if (self.offset+100) <= self.nrecords:
                 self.offset += 100
                 if self.direction.lower() == 'ascending':
-                    if self.sort_field.lower() == 'name':
+                    if self.sort_field.lower() == 'item':
                         return self.c.execute('SELECT * FROM inventory ORDER BY item ASC LIMIT 100 OFFSET ?', (self.offset-100,))
                     elif self.sort_field.lower() == 'price':
                         return self.c.execute('SELECT * FROM inventory ORDER BY price ASC LIMIT 100 OFFSET ?', (self.offset-100,))
@@ -94,7 +94,7 @@ class Inventory(object):
                     elif self.sort_field.lower() == 'updated':
                         return self.c.execute('SELECT * FROM inventory ORDER BY updated ASC LIMIT 100 OFFSET ?', (self.offset-100,))
                 elif self.direction.lower() == 'descending':
-                    if self.sort_field.lower() == 'name':
+                    if self.sort_field.lower() == 'item':
                         return self.c.execute('SELECT * FROM inventory ORDER BY item DESC LIMIT 100 OFFSET ?', (self.offset-100,))
                     elif self.sort_field.lower() == 'price':
                         return self.c.execute('SELECT * FROM inventory ORDER BY price DESC LIMIT 100 OFFSET ?', (self.offset-100,))
@@ -121,7 +121,7 @@ class Inventory(object):
                 elif self.sort_field.lower() == 'updated':
                     return self.c.execute('SELECT * FROM inventory ORDER BY updated ASC LIMIT 100 OFFSET ?', (self.offset-100,))
             elif self.direction.lower() == 'descending':
-                if self.sort_field.lower() == 'name':
+                if self.sort_field.lower() == 'item':
                     return self.c.execute('SELECT * FROM inventory ORDER BY item DESC LIMIT 100 OFFSET ?', (self.offset-100,))
                 elif self.sort_field.lower() == 'price':
                     return self.c.execute('SELECT * FROM inventory ORDER BY price DESC LIMIT 100 OFFSET ?', (self.offset-100,))
@@ -153,7 +153,7 @@ class Inventory(object):
             record = (name + '%', lowprice)
             if sortby.lower() == 'item':
                 return self.c.execute('SELECT * FROM inventory WHERE item LIKE ? AND price >= ? ORDER BY item', record)
-            elif sortby.lower() == 'item':
+            elif sortby.lower() == 'price':
                 return self.c.execute('SELECT * FROM inventory WHERE item LIKE ? AND price >= ? ORDER BY price', record)
             else:
                 print 'Can only sort by "item" or "price"'

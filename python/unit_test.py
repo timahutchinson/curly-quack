@@ -52,7 +52,7 @@ class InventoryTest(unittest.TestCase):
         self.assertEqual(self.count_records(), nrecords-1)
 
     def test_query_sort(self):
-        for field in ['name', 'price', 'qty', 'updated']:
+        for field in ['item', 'price', 'qty', 'updated']:
             for direction in ['ascending', 'descending']:
                 count = 0
                 for row in self.inv.query_sort(field, direction):
