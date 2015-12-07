@@ -102,7 +102,7 @@ class InventoryTest(unittest.TestCase):
     def test_search_by_name(self):
         # Test should return same number of results regardless of sort
         count = 0
-        for row in self.inv.search_by_name('item0', 0, 100, 'name'):
+        for row in self.inv.search_by_name('item0', 0, 100, 'item'):
             count += 1
         self.assertEqual(count, 100)
         count = 0

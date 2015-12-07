@@ -55,6 +55,7 @@ class Inventory(object):
         self.direction = direction
         self.offset = 100
         if self.direction.lower() == 'ascending':
+            # ORDER BY has a bug that doesn't allow insertion of value from tuple at the moment
             if self.sort_field.lower() == 'name':
                 return self.c.execute('SELECT * FROM inventory ORDER BY item ASC LIMIT 100')
             elif self.sort_field.lower() == 'price':
@@ -138,10 +139,22 @@ class Inventory(object):
         else:
             return self.c.execute('SELECT * FROM inventory WHERE price >= ? ORDER BY price', (low,))
 
-    def search_by_name(self, name, lowprice=0, highprice=None, sortby='name'):
+    def search_by_name(self, name, lowprice=0, highprice=None, sortby='item'):
         if highprice is not None:
-            record = (name + '%', lowprice, highprice, sortby)
-            return self.c.execute('SELECT * FROM inventory WHERE item LIKE ? AND price >= ? AND price <= ? ORDER BY ?', record)
+            record = (name + '%', lowprice, highprice)
+            if sortby.lower() == 'item':
+                return self.c.execute('SELECT * FROM inventory WHERE item LIKE ? AND price >= ? AND price <= ? ORDER BY item', record)
+            elif sortby.lower() == 'price':
+                return self.c.execute('SELECT * FROM inventory WHERE item LIKE ? AND price >= ? AND price <= ? ORDER BY price', record)
+            else:
+                print 'Can only sort by "item" or "price"'
+                return []
         else:
-            record = (name + '%', lowprice, sortby)
-            return self.c.execute('SELECT * FROM inventory WHERE item LIKE ? AND price >= ? ORDER BY ?', record)
+            record = (name + '%', lowprice)
+            if sortby.lower() == 'item':
+                return self.c.execute('SELECT * FROM inventory WHERE item LIKE ? AND price >= ? ORDER BY item', record)
+            elif sortby.lower() == 'item':
+                return self.c.execute('SELECT * FROM inventory WHERE item LIKE ? AND price >= ? ORDER BY price', record)
+            else:
+                print 'Can only sort by "item" or "price"'
+                return []
