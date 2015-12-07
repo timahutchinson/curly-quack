@@ -104,3 +104,28 @@ class Inventory(object):
                 return []
         else:
             self.query_sort()
+
+    def prev_page(self):
+        if self.offset > 100:
+            self.offset -= 100
+            if self.direction.lower() == 'ascending':
+                if self.sort_field.lower() == 'name':
+                    return self.c.execute('SELECT * FROM inventory ORDER BY item ASC LIMIT 100 OFFSET ?', (self.offset-100,))
+                elif self.sort_field.lower() == 'price':
+                    return self.c.execute('SELECT * FROM inventory ORDER BY price ASC LIMIT 100 OFFSET ?', (self.offset-100,))
+                elif self.sort_field.lower() == 'qty':
+                    return self.c.execute('SELECT * FROM inventory ORDER BY qty ASC LIMIT 100 OFFSET ?', (self.offset-100,))
+                elif self.sort_field.lower() == 'updated':
+                    return self.c.execute('SELECT * FROM inventory ORDER BY updated ASC LIMIT 100 OFFSET ?', (self.offset-100,))
+            elif self.direction.lower() == 'descending':
+                if self.sort_field.lower() == 'name':
+                    return self.c.execute('SELECT * FROM inventory ORDER BY item DESC LIMIT 100 OFFSET ?', (self.offset-100,))
+                elif self.sort_field.lower() == 'price':
+                    return self.c.execute('SELECT * FROM inventory ORDER BY price DESC LIMIT 100 OFFSET ?', (self.offset-100,))
+                elif self.sort_field.lower() == 'qty':
+                    return self.c.execute('SELECT * FROM inventory ORDER BY qty DESC LIMIT 100 OFFSET ?', (self.offset-100,))
+                elif self.sort_field.lower() == 'updated':
+                    return self.c.execute('SELECT * FROM inventory ORDER BY updated DESC LIMIT 100 OFFSET ?', (self.offset-100,))
+        else:
+            print 'Already on first page.'
+            return []
