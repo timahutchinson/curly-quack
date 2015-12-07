@@ -1,6 +1,5 @@
 import numpy as np
 import datetime
-import os
 
 class Inventory(object):
     
@@ -12,3 +11,4 @@ class Inventory(object):
         record = ('item%s' % i, '{0:.2f}'.format(price), int(count), str(datetime.datetime.now()))
         c.execute('INSERT INTO inventory VALUES (?,?,?,?)', record)
         conn.commit()
+

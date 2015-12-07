@@ -3,6 +3,8 @@ import sqlite3
 from os.path import join
 from os import remove, environ
 
+from inventory import Inventory
+
 class DatabaseTest(unittest.TestCase):
 
     def setUp(self):
@@ -40,8 +42,17 @@ class InventoryTest(unittest.TestCase):
         self.conn.close()
         remove('test.db')
 
-    def test_blah(self):
-        pass
+    def test_add_record_to_database(self):
+        nrecords = self.count_records()
+        inv = Inventory()
+        inv.add_item('test_item', 15.00, 200)
+        self.assertEqual(self.count_records(), nrecords+1)
+
+    def count_records(self):
+        count = 0
+        for row in self.c.execute('SELECT * FROM inventory'):
+            count += 1
+        return count
 
 
 if __name__ == '__main__':
