@@ -16,7 +16,8 @@ prices = np.abs(np.random.normal(10., 4, 300))
 
 records = []
 for i, price in enumerate(prices):
-    records.append(('item%s' % i, '%.02f' % price, 500, str(datetime.datetime.now())))
+    print '{0:.2f}'.format(float(price))
+    records.append(('item%s' % i, '{0:.2f}'.format(price), 500, str(datetime.datetime.now())))
 
 c.executemany('INSERT INTO inventory VALUES (?,?,?,?)', records)
 

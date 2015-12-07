@@ -17,10 +17,11 @@ class DatabaseTest(unittest.TestCase):
         self.assertEqual(count, 300)
 
     def test_entry_types(self):
-        # Check if price is a float
+        # Check if price is a float and has 2 digits after decimal
         for price in self.c.execute('SELECT price FROM inventory'):
             price = price[0]
             self.assertEqual(type(price), type(1.))
+            self.assertEqual(len('{0:.2f}'.format(price).split('.')[1]), 2)
         # Check if qty is int
         for qty in self.c.execute('SELECT qty FROM inventory'):
             qty = qty[0]
