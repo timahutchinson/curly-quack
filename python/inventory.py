@@ -43,6 +43,11 @@ class Inventory(object):
         self.c.execute('UPDATE inventory SET qty = ? WHERE item=?', record)
         self.conn.commit()
 
+    def update_price(self, name, newprice):
+        record = (newprice, name)
+        self.c.execute('UPDATE inventory SET price = ? WHERE item=?', record)
+        self.conn.commit()
+
     def query_sort(self, sort_field='name', direction='ascending'):
         self.sort_field = sort_field
         self.direction = direction

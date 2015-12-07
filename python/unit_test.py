@@ -71,6 +71,13 @@ class InventoryTest(unittest.TestCase):
         self.assertEqual(self.inv.c.fetchone()[0], 250)
         self.inv.update_qty('item000', 500)
 
+    def test_update_price(self):
+        original_price = self.inv.c.execute('SELECT price FROM inventory WHERE item=?', ('item000',)).fetchone()[0]
+        self.inv.update_price('item000', 10)
+        self.inv.c.execute('SELECT price FROM inventory WHERE item=?', ('item000',))
+        self.assertEqual(self.inv.c.fetchone()[0], 10)
+        self.inv.update_price('item000', original_price)
+
     def count_records(self):
         count = 0
         for row in self.inv.c.execute('SELECT * FROM inventory'):
