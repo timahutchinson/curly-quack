@@ -21,8 +21,10 @@ class Inventory(object):
 
     def count_records(self):
         self.nrecords = 0
-        for row in self.c.execute('SELECT * FROM inventory'):
-            self.nrecords += 1
+        try:
+            self.nrecords = self.c.execute('SELECT Count(*) FROM inventory').fetchone()[0]
+        except OperationalError:
+            pass
 
     def close(self):
         self.conn.commit()
@@ -135,3 +137,11 @@ class Inventory(object):
             return self.c.execute('SELECT * FROM inventory WHERE price >= ? AND price <= ? ORDER BY price', (low, high))
         else:
             return self.c.execute('SELECT * FROM inventory WHERE price >= ? ORDER BY price', (low,))
+
+    def search_by_name(self, name, lowprice=0, highprice=None, sortby='name'):
+        if highprice is not None:
+            record = (name + '%', lowprice, highprice, sortby)
+            return self.c.execute('SELECT * FROM inventory WHERE item LIKE ? AND price >= ? AND price <= ? ORDER BY ?', record)
+        else:
+            record = (name + '%', lowprice, sortby)
+            return self.c.execute('SELECT * FROM inventory WHERE item LIKE ? AND price >= ? ORDER BY ?', record)
