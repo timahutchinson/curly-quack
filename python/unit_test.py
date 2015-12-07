@@ -62,7 +62,8 @@ class InventoryTest(unittest.TestCase):
     def test_count_records(self):
         self.assertEqual(self.count_records(), self.inv.nrecords)
 
-    def test_next_page
+    def test_next_page():
+        pass
 
     def count_records(self):
         count = 0
