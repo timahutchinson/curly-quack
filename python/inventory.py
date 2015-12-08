@@ -30,6 +30,9 @@ class Inventory(object):
         self.conn.commit()
         self.conn.close()
 
+    def view_qty(self, name):
+        return self.c.execute('SELECT qty FROM inventory WHERE item=?', (name,)).fetchone()[0]
+
     def add_item(self, name, price, count):
         record = ('%s' % name, '{0:.2f}'.format(price), int(count), str(datetime.datetime.now()))
         self.c.execute('INSERT INTO inventory VALUES (?,?,?,?)', record)
