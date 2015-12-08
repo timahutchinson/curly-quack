@@ -78,17 +78,68 @@ class Cart(object):
         for key in self._basket:
             list.append( (key, self._basket[key], self.inv.view_price(key)) )
         if sortby.lower() == 'item':
-            list.sort(key=lambda tup: tup[0])
+            self.sort_list_of_tuples(list,0)
         elif sortby.lower() == 'qty':
-            list.sort(key=lambda tup: tup[1])
+            self.sort_list_of_tuples(list,1)
         elif sortby.lower() == 'price':
-            list.sort(key=lambda tup: tup[2])
+            self.sort_list_of_tuples(list,2)
         else:
             print 'Cart can only be sorted by "item", "qty", or "price".'
             return
         for _tuple in list:
             yield _tuple
 
+    def query_by_price(self, lowprice=0, highprice=None, sortby='item'):
+        list = []
+        if highprice is not None:
+            for key in self._basket:
+                this_price = self.inv.view_price(key)
+                if this_price >= lowprice and this_price <= highprice:
+                    list.append( (key, self._basket[key], self.inv.view_price(key)) )
+        else:
+            for key in self._basket:
+                this_price = self.inv.view_price(key)
+                if this_price >= lowprice:
+                    list.append( (key, self._basket[key], self.inv.view_price(key)) )
+        if sortby.lower() == 'item':
+            self.sort_list_of_tuples(list,0)
+        elif sortby.lower() == 'qty':
+            self.sort_list_of_tuples(list,1)
+        elif sortby.lower() == 'price':
+            self.sort_list_of_tuples(list,2)
+        else:
+            print 'Cart can only be sorted by "item", "qty", or "price".'
+            return
+        for _tuple in list:
+            yield _tuple
+
+    def sort_list_of_tuples(self, list, index):
+        return list.sort(key=lambda tup: tup[index])
+
+    def query_by_name(self, name, lowprice=0, highprice=None, sortby='item'):
+        list = []
+        if highprice is not None:
+            for key in self._basket:
+                this_price = self.inv.view_price(key)
+                if this_price >= lowprice and this_price <= highprice and key.startswith(name.lower()):
+                    list.append( (key, self._basket[key], this_price) )
+        else:
+            for key in self._basket:
+                this_price = self.inv.view_price(key)
+                if this_price >= lowprice and key.startswith(name.lower()):
+                    list.append( (key, self._basket[key], this_price) )
+        if sortby.lower() == 'item':
+            self.sort_list_of_tuples(list,0)
+        elif sortby.lower() == 'qty':
+            self.sort_list_of_tuples(list,1)
+        elif sortby.lower() == 'price':
+            self.sort_list_of_tuples(list,2)
+        else:
+            print 'Cart can only be sorted by "item", "qty", or "price".'
+            return
+        for _tuple in list:
+            yield _tuple
+            
 
 
 
