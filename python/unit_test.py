@@ -4,6 +4,7 @@ from os.path import join
 from os import remove, environ
 
 from inventory import Inventory
+from cart import Cart
 
 class DatabaseTest(unittest.TestCase):
 
@@ -118,8 +119,43 @@ class InventoryTest(unittest.TestCase):
             count += 1
         self.assertEqual(count, 100)
 
+    def test_get_qty(self):
+        self.inv.update_qty('item100', 1000)
+        self.assertEqual(self.inv.view_qty('item100'), 1000)
+        self.inv.update_qty('item100', 1000)
+
     def count_records(self):
         return self.inv.c.execute('SELECT Count(*) FROM inventory').fetchone()[0]
+
+
+class CartTest(unittest.TestCase):
+    
+    def setUp(self):
+        self.cart = Cart()
+        self.inv = Inventory()
+
+    def tearDown(self):
+        self.inv.close()
+
+    def test_add_items_to_basket(self):
+        # Test adding item, make sure it's in cart and inventory updates to reflect that
+        old_qty= self.inv.view_qty('item050')
+        self.cart.add_item('item050', 10)
+        self.assertEqual(self.cart.basket('item050'), 10)
+        self.assertEqual(self.inv.view_qty('item050'), old_qty-10)
+        self.inv.update_qty('item050', 500)
+        # Test adding more to cart than inventory contains
+        self.cart._basket['item050'] = 0 # Temporary kluge 
+        self.cart.add_item('item050', 600)
+        self.assertEqual(self.cart.basket('item050'), 500)
+        self.assertEqual(self.inv.view_qty('item050'), 0)
+        self.inv.update_qty('item050', 500)
+
+    def test_remove_items_from_basket(self):
+        self.cart.add_item('item050', 10)
+        self.cart.remove_item('item050',5)
+        self.assertEqual(self.cart.basket('item050'), 5)
+        self.assertEqual(self.inv.view_qty('item050'), 495)
 
 
 if __name__ == '__main__':
