@@ -43,6 +43,27 @@ class Cart(object):
             else:
                 self.inv.update_qty(name, self.inv.view_qty(name.lower())+self._basket[name.lower()])
                 self._basket[name.lower()] = 0
+
+    def edit_item(self, name, qty):
+        if qty < 0:
+            return
+        diff = qty - self.basket(name.lower())
+        if diff > 0:
+            # Need to add items from inventory
+            if self.inv.view_qty(name.lower()) >= diff:
+                self._basket[name.lower()] = qty
+                self.inv.update_qty(name, self.inv.view_qty(name.lower())-diff)
+            else:
+                print 'Only %s in inventory' % self.inv.view_qty(name.lower())
+                self._basket[name.lower()] = self.inv.view_qty(name.lower())
+                self.inv.update_qty(name, 0)
+        elif diff < 0:
+            # Remove items from cart
+            self._basket[name.lower()] = qty
+            self.inv.update_qty(name, self.inv.view_qty(name.lower())-diff)
+        else:
+            # Cart already has qty items
+            pass
                 
 
 
