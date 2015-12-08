@@ -157,6 +157,26 @@ class CartTest(unittest.TestCase):
         self.assertEqual(self.cart.basket('item050'), 5)
         self.assertEqual(self.inv.view_qty('item050'), 495)
 
+    def test_edit_items(self):
+        # Change to a quantity greater than you already have
+        self.cart.edit_item('item050', 50)
+        self.cart.edit_item('item050', 70)
+        self.assertEqual(self.cart.basket('item050'), 70)
+        self.assertEqual(self.inv.view_qty('item050'), 430)
+        self.cart.remove_item('item050', 70)
+        # Add more than are in inventory
+        self.cart.edit_item('item050', 1000)
+        self.assertEqual(self.inv.view_qty('item050'), 0)
+        self.assertEqual(self.cart.basket('item050'), 500)
+        self.cart.remove_item('item050', 500)
+        # Change to a quantity less than what you already have
+        self.cart.add_item('item050', 100)
+        self.cart.edit_item('item050', 50)
+        self.assertEqual(self.inv.view_qty('item050'), 450)
+        self.assertEqual(self.cart.basket('item050'), 50)
+        self.cart.remove_item('item050', 50)
+        
+
 
 if __name__ == '__main__':
     unittest.main()
