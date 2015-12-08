@@ -33,6 +33,9 @@ class Inventory(object):
     def view_qty(self, name):
         return self.c.execute('SELECT qty FROM inventory WHERE item=?', (name,)).fetchone()[0]
 
+    def view_price(self, name):
+        return self.c.execute('SELECT price FROM inventory WHERE item=?', (name,)).fetchone()[0]
+
     def add_item(self, name, price, count):
         record = ('%s' % name, '{0:.2f}'.format(price), int(count), str(datetime.datetime.now()))
         self.c.execute('INSERT INTO inventory VALUES (?,?,?,?)', record)
