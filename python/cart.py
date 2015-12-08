@@ -2,6 +2,7 @@ import datetime
 from os import environ
 from os.path import join, exists
 import sqlite3
+import operator
 
 import numpy as np
 
@@ -64,10 +65,29 @@ class Cart(object):
         else:
             # Cart already has qty items
             pass
-                
 
+    def items_total(self):
+        """Return total cost of all items in cart."""
+        total = 0
+        for item in self._basket:
+            total += self._basket[item] * self.inv.c.execute('SELECT price FROM inventory WHERE item=?', (item,)).fetchone()[0]
+        return total
 
-
+    def list_items(self, sortby='item'):
+        list = []
+        for key in self._basket:
+            list.append( (key, self._basket[key], self.inv.view_price(key)) )
+        if sortby.lower() == 'item':
+            list.sort(key=lambda tup: tup[0])
+        elif sortby.lower() == 'qty':
+            list.sort(key=lambda tup: tup[1])
+        elif sortby.lower() == 'price':
+            list.sort(key=lambda tup: tup[2])
+        else:
+            print 'Cart can only be sorted by "item", "qty", or "price".'
+            return
+        for _tuple in list:
+            yield _tuple
 
 
 

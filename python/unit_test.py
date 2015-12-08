@@ -176,7 +176,22 @@ class CartTest(unittest.TestCase):
         self.assertEqual(self.cart.basket('item050'), 50)
         self.cart.remove_item('item050', 50)
         
+    def test_items_total(self):
+        self.cart.add_item('item100', 100)
+        cost = 100 * self.inv.view_price('item100')
+        self.assertEqual(self.cart.items_total(), cost)
+        self.cart.remove_item('item100', 100)
 
+    def test_list_items(self):
+        self.cart.add_item('item100', 100)
+        # Test listing sorted by item name
+        for _tuple in self.cart.list_items('item'):
+            self.assertEqual(_tuple, ('item100', 100, self.inv.view_price('item100')))
+        # Test listing sorted by qty
+        for _tuple in self.cart.list_items('price'):
+            self.assertEqual(_tuple, ('item100', 100, self.inv.view_price('item100')))
+        # Test listing sorted by price
+            self.assertEqual(_tuple, ('item100', 100, self.inv.view_price('item100')))
 
 if __name__ == '__main__':
     unittest.main()
