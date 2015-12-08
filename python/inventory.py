@@ -145,7 +145,7 @@ class Inventory(object):
         else:
             return self.c.execute('SELECT * FROM inventory WHERE price >= ? ORDER BY price', (low,))
 
-    def search_by_name(self, name, lowprice=0, highprice=None, sortby='item'):
+    def query_by_name(self, name, lowprice=0, highprice=None, sortby='item'):
         if highprice is not None:
             record = (name + '%', lowprice, highprice)
             if sortby.lower() == 'item':

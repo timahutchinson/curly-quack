@@ -100,22 +100,22 @@ class InventoryTest(unittest.TestCase):
             count += 1
         self.assertEqual(count, self.count_records())
 
-    def test_search_by_name(self):
+    def test_query_by_name(self):
         # Test should return same number of results regardless of sort
         count = 0
-        for row in self.inv.search_by_name('item0', 0, 100, 'item'):
+        for row in self.inv.query_by_name('item0', 0, 100, 'item'):
             count += 1
         self.assertEqual(count, 100)
         count = 0
-        for row in self.inv.search_by_name('item0', 0, 100, 'price'):
+        for row in self.inv.query_by_name('item0', 0, 100, 'price'):
             count += 1
         self.assertEqual(count, 100)
         count = 0
-        for row in self.inv.search_by_name('item0', 0, 100):
+        for row in self.inv.query_by_name('item0', 0, 100):
             count += 1
         self.assertEqual(count, 100)
         count = 0
-        for row in self.inv.search_by_name('item0'):
+        for row in self.inv.query_by_name('item0'):
             count += 1
         self.assertEqual(count, 100)
 
@@ -192,6 +192,7 @@ class CartTest(unittest.TestCase):
             self.assertEqual(_tuple, ('item100', 100, self.inv.view_price('item100')))
         # Test listing sorted by price
             self.assertEqual(_tuple, ('item100', 100, self.inv.view_price('item100')))
+        self.cart.remove_item('item100', 100)
 
 if __name__ == '__main__':
     unittest.main()
