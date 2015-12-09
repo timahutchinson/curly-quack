@@ -15,7 +15,9 @@ easily become models, and each method called by a view).
 Set-up
 ------
 
-A test database needs to be created by running the create_db.py script.
+The environmental variable QVANTEL_DIR needs to be set to point to the top directory
+of the repo (i.e., the directory this file is in).
+Then, a test database needs to be created by running the create_db.py script.
 
 Classes
 -------
