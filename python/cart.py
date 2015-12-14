@@ -17,7 +17,8 @@ class Cart(object):
 
     def to_JSON(self):
         # JSON serializability
-        del self.inv
+        del self.inv.c
+        del self.inv.conn
         print json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
         self.inv = Inventory()
 
