@@ -17,7 +17,7 @@ class Inventory(object):
         self.close()
         del self.c
         del self.conn
-        print json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        print (json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4))
         self.open_db()
 
     def open_db(self):
