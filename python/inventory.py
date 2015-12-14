@@ -2,6 +2,7 @@ import datetime
 from os import environ
 from os.path import join, exists
 import sqlite3
+import json
 
 import numpy as np
 
@@ -10,6 +11,14 @@ class Inventory(object):
     def __init__(self):
         self.open_db()
         self.count_records()
+
+    def to_JSON(self):
+        # JSON serializability
+        self.close()
+        del self.c
+        del self.conn
+        print json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        self.open_db()
 
     def open_db(self):
         if exists( join(environ['QVANTEL_DIR'], 'inventory.db') ):

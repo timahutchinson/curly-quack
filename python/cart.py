@@ -3,6 +3,7 @@ from os import environ
 from os.path import join, exists
 import sqlite3
 import operator
+import json
 
 import numpy as np
 
@@ -13,6 +14,12 @@ class Cart(object):
     def __init__(self):
         self.inv = Inventory()
         self._basket = {}
+
+    def to_JSON(self):
+        # JSON serializability
+        del self.inv
+        print json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        self.inv = Inventory()
 
     def basket(self, name):
         try:
