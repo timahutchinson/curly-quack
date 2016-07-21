@@ -10,7 +10,7 @@ and API for a product catalog and shopping basket for a website.  It's written
 in Python. The only package dependency outside the standard library is NumPy.
 It's supposed to be a mock website backend, so I've tried to write it in a way
 that would easily plug into a Django web interface (i.e., the classes here could
-easily become models, and each method called by a view).
+easily become models, and each method called by a view). [test](www.google.com)
 
 Set-up
 ------
